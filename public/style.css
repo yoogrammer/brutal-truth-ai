@@ -1,0 +1,54 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #030712;
+}
+
+.task-card-miss {
+    border-color: #FF2D20;
+    background: rgba(255, 45, 32, 0.05);
+}
+
+.task-card-risk {
+    border-color: #FF8C00;
+    background: rgba(255, 140, 0, 0.05);
+}
+
+.task-card-ok {
+    border-color: #00C853;
+    background: rgba(0, 200, 83, 0.05);
+}
+
+.verdict-miss {
+    border-color: #FF2D20;
+    background: rgba(255, 45, 32, 0.1);
+}
+
+.verdict-barely {
+    border-color: #FF8C00;
+    background: rgba(255, 140, 0, 0.1);
+}
+
+.verdict-ok {
+    border-color: #00C853;
+    background: rgba(0, 200, 83, 0.1);
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+.progress-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: #1f2937;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s ease;
+}

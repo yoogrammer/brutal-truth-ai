@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Brutal Truth AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brutal: "#FF2D20",
+                        warn: "#FF8C00",
+                        safe: "#00C853",
+                    },
+                },
+            },
+        };
+    </script>
+</head>
+
+<body class="bg-gray-950 text-white min-h-screen font-mono">
+    <!-- HEADER -->
+    <div class="border-b border-red-900 bg-gray-950 sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-3 h-3 rounded-full bg-brutal animate-pulse"></div>
+                <span class="text-xl font-bold text-brutal tracking-wider">
+                    BRUTAL TRUTH AI
+                </span>
+            </div>
+            <span class="text-xs text-gray-500">No sugar coating. Just math.</span>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <!-- HERO -->
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-black mb-3 text-white">
+                Will You Actually
+                <span class="text-brutal">Make It?</span>
+            </h1>
+            <p class="text-gray-400 text-sm max-w-md mx-auto">
+                Enter your tasks and free time. Get the honest mathematical truth
+                about your deadlines — before it's too late to act.
+            </p>
+        </div>
+
+        <!-- INPUT SECTION -->
+        <div id="inputSection" class="space-y-6">
+            <!-- User Info -->
+            <div class="bg-gray-900 border border-gray-800 rounded-xl p-6">
+                <h2 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4">
+                    Your Situation
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">Your Name</label>
+                        <input id="userName" type="text" placeholder="Alex"
+                            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brutal" />
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">
+                            Free Hours Available Today
+                        </label>
+                        <input id="availableHours" type="number" step="0.5" min="0" max="24" placeholder="e.g. 4"
+                            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brutal" />
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-500 mb-1">
+                            Current Time
+                        </label>
+                        <input id="currentTime" type="time"
+                            class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brutal" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks -->
+            <div class="bg-gray-900 border border-gray-800 rounded-xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-sm font-bold text-gray-400 uppercase tracking-widest">
+                        Your Tasks
+                    </h2>
+                    <button onclick="addTask()"
+                        class="text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg transition">
+                        + Add Task
+                    </button>
+                </div>
+                <div id="taskList" class="space-y-4"></div>
+            </div>
+
+            <!-- Demo Button -->
+            <div class="flex gap-3">
+                <button onclick="loadDemo()"
+                    class="flex-1 border border-gray-700 hover:border-gray-500 text-gray-400 hover:text-white py-3 rounded-xl text-sm transition">
+                    Try Demo Data
+                </button>
+                <button onclick="analyze()" id="analyzeBtn"
+                    class="flex-2 bg-brutal hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl text-sm transition flex items-center gap-2 justify-center">
+                    <span>Get The Brutal Truth</span>
+                    <span>→</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- LOADING -->
+        <div id="loadingSection" class="hidden text-center py-20">
+            <div class="inline-flex flex-col items-center gap-4">
+                <div class="w-12 h-12 border-2 border-brutal border-t-transparent rounded-full animate-spin"></div>
+                <p class="text-gray-400 text-sm" id="loadingText">
+                    Calculating the truth...
+                </p>
+            </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div id="resultsSection" class="hidden space-y-6">
+            <!-- Verdict Banner -->
+            <div id="verdictBanner" class="rounded-xl p-6 border-2 text-center">
+                <div class="text-5xl font-black mb-2" id="verdictEmoji"></div>
+                <div class="text-2xl font-black mb-2" id="verdictTitle"></div>
+                <div class="text-sm opacity-80" id="verdictMessage"></div>
+            </div>
+
+            <!-- Math Breakdown -->
+            <div class="bg-gray-900 border border-gray-800 rounded-xl p-6">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">
+                    The Math
+                </h3>
+                <div class="grid grid-cols-3 gap-4 mb-4">
+                    <div class="text-center">
+                        <div class="text-2xl font-black text-white" id="hoursNeeded">-</div>
+                        <div class="text-xs text-gray-500 mt-1">Hours Needed</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-black text-white" id="hoursAvailable">-</div>
+                        <div class="text-xs text-gray-500 mt-1">Hours Available</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-black" id="hoursShortfall">-</div>
+                        <div class="text-xs text-gray-500 mt-1">Hours Short</div>
+                    </div>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-3 text-xs text-gray-400" id="mathBreakdown"></div>
+            </div>
+
+            <!-- Immediate Action -->
+            <div class="bg-yellow-950 border border-yellow-700 rounded-xl p-5">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-yellow-400 text-lg">⚡</span>
+                    <span class="text-xs font-bold text-yellow-400 uppercase tracking-widest">
+                        Do This RIGHT NOW (Next 15 Minutes)
+                    </span>
+                </div>
+                <div class="text-white font-bold" id="immediateAction"></div>
+            </div>
+
+            <!-- Task Cards -->
+            <div>
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">
+                    Task-by-Task Truth
+                </h3>
+                <div id="taskCards" class="space-y-4"></div>
+            </div>
+
+            <!-- Survival Plan -->
+            <div id="survivalPlanBox" class="hidden bg-gray-900 border border-green-800 rounded-xl p-5">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-green-400">🛟</span>
+                    <span class="text-xs font-bold text-green-400 uppercase tracking-widest">
+                        Survival Plan
+                    </span>
+                </div>
+                <div class="text-sm text-gray-300" id="survivalPlan"></div>
+            </div>
+
+            <!-- Reset -->
+            <button onclick="reset()"
+                class="w-full border border-gray-700 hover:border-gray-500 text-gray-400 hover:text-white py-3 rounded-xl text-sm transition">
+                ← Start Over
+            </button>
+        </div>
+
+        <!-- EMAIL MODAL -->
+        <div id="emailModal"
+            class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
+            <div class="bg-gray-900 border border-gray-700 rounded-xl p-6 max-w-lg w-full">
+                <h3 class="font-bold text-white mb-4">Draft Renegotiation Email</h3>
+                <div class="space-y-3 mb-4">
+                    <input id="emailRecipient" placeholder="Recipient (e.g. Professor Smith)"
+                        class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brutal" />
+                    <input id="emailReason" placeholder="Reason (e.g. underestimated scope)"
+                        class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-brutal" />
+                </div>
+                <div id="emailOutput" class="hidden bg-gray-800 rounded-lg p-4 mb-4">
+                    <div class="text-xs text-gray-400 mb-1">Subject:</div>
+                    <div class="text-sm text-white font-bold mb-3" id="emailSubject"></div>
+                    <div class="text-xs text-gray-400 mb-1">Body:</div>
+                    <div class="text-sm text-gray-300 whitespace-pre-line" id="emailBody"></div>
+                    <button onclick="copyEmail()"
+                        class="mt-3 text-xs bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded-lg transition">
+                        Copy to Clipboard
+                    </button>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="generateEmail()"
+                        class="flex-1 bg-brutal hover:bg-red-700 text-white text-sm font-bold py-2 rounded-lg transition">
+                        Generate Email
+                    </button>
+                    <button onclick="closeEmailModal()"
+                        class="flex-1 border border-gray-700 text-gray-400 text-sm py-2 rounded-lg hover:border-gray-500 transition">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
